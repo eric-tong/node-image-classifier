@@ -31,5 +31,9 @@
       ],
       "@babel/preset-typescript"
     ]
+  },
+  "dependencies": {
+    "@tensorflow-models/mobilenet": "^2.0.4",
+    "@tensorflow/tfjs-node": "^2.0.1"
   }
 }
