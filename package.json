@@ -2,7 +2,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "compile": "yarn run tsc --watch",
-    "start": "node --enable-source-maps .out/index",
+    "train": "node --enable-source-maps .out/train",
     "test": "yarn run jest --passWithNoTests"
   },
   "devDependencies": {
