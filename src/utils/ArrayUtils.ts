@@ -1,14 +1,11 @@
-export function getRandomSample<T>(array: T[], size: number) {
-  return shuffle([...array]).slice(0, size);
-}
-
-function shuffle<T>(array: T[]) {
-  var currentIndex = array.length,
+export function shuffle<T>(array: T[]) {
+  const generate = getRandomGenerator();
+  let currentIndex = array.length,
     temporaryValue,
     randomIndex;
 
   while (0 !== currentIndex) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
+    randomIndex = Math.floor(generate() * currentIndex);
     currentIndex -= 1;
 
     temporaryValue = array[currentIndex];
@@ -17,6 +14,11 @@ function shuffle<T>(array: T[]) {
   }
 
   return array;
+}
+
+function getRandomGenerator() {
+  let seed = 0;
+  return () => Math.sin(++seed) / 2 + 0.5;
 }
 
 export function max(array: { [category: string]: number }) {
