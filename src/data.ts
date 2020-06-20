@@ -7,18 +7,14 @@ const readFile = promisify(fs.readFile);
 
 export async function getData(dataType: DataType) {
   const manifest = await getManifest(dataType);
-  const sample = getRandomSample(manifest, 10);
-  return await Promise.all(
-    sample.map(({ filename, category }) =>
-      getArrayFromImage(
-        dataType === "train"
-          ? `./dataset/train/train/${category}/${filename}`
-          : `./dataset/test/test/${filename}`
-      )
-        .then((array) => ({ array, category }))
-        .catch(console.error)
-    )
-  );
+  const sample = getRandomSample(manifest, 100);
+  return sample.map(({ filename, category }) => ({
+    path:
+      dataType === "train"
+        ? `./dataset/train/train/${category}/${filename}`
+        : `./dataset/test/test/${filename}`,
+    category,
+  }));
 }
 
 async function getManifest(dataType: DataType) {
@@ -27,7 +23,7 @@ async function getManifest(dataType: DataType) {
   return manifest;
 }
 
-async function getArrayFromImage(path: string) {
+export async function getArrayFromImage(path: string) {
   const image = await readFile(path);
   const buffer = Buffer.from(image);
   return new Uint8Array(buffer);
