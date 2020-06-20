@@ -1,5 +1,4 @@
 import fs from "fs";
-import { getRandomSample } from "./utils";
 import neatCsv from "neat-csv";
 import { promisify } from "util";
 
@@ -7,8 +6,7 @@ const readFile = promisify(fs.readFile);
 
 export async function getData(dataType: DataType) {
   const manifest = await getManifest(dataType);
-  const sample = getRandomSample(manifest, 100);
-  return sample.map(({ filename, category }) => ({
+  return manifest.map(({ filename, category }) => ({
     path:
       dataType === "train"
         ? `./dataset/train/train/${category}/${filename}`

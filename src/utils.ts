@@ -18,3 +18,13 @@ function shuffle<T>(array: T[]) {
 
   return array;
 }
+
+export function max(array: { [category: string]: number }) {
+  let maxCategory = "";
+  let maxProbablity = 0;
+
+  for (const [category, probability] of Object.entries(array)) {
+    if (probability > maxProbablity) maxCategory = category;
+  }
+  return maxCategory;
+}
