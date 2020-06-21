@@ -12,13 +12,11 @@ export async function getData() {
   let completed = 0;
 
   await Promise.all(
-    Array.from({ length: 42 }, (_, i) => {
+    Array.from({ length: 42 }, async (_, i) => {
       const category = i.toString().padStart(2, "0");
-      return getActivations(category)
-        .then((data) => data.push(...data))
-        .then(() =>
-          console.log("Getting data: ", `Completed ${++completed} of 42`)
-        );
+      const activations = await getActivations(category);
+      data.push(...activations);
+      console.log("Getting data: ", `Completed ${++completed} of 42`);
     })
   );
   shuffle(data);

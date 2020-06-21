@@ -9,7 +9,7 @@ export async function trainKnnClassifier(
 
   for (const { activation, category } of data) {
     classifier.addExample(activation, category);
-    console.log("Training: ", `Completed ${complete} of ${data.length}`);
+    console.log("Training: ", `Completed ${++complete} of ${data.length}`);
   }
 
   return classifier;
