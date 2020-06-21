@@ -2,10 +2,7 @@ import { TRAINING_SIZE, VALIDATION_SIZE } from "./config";
 
 import fs from "fs";
 import neatCsv from "neat-csv";
-import { promisify } from "util";
 import { shuffle } from "./utils/ArrayUtils";
-
-const readFile = promisify(fs.readFile);
 
 export async function getData(dataType: DataType) {
   const manifest = await getManifest(dataType);
@@ -19,18 +16,20 @@ export async function getData(dataType: DataType) {
 
   shuffle(data);
   return dataType === "train"
-    ? data.slice(0, TRAINING_SIZE)
-    : data.slice(data.length - VALIDATION_SIZE);
+    ? data.slice(0, TRAINING_SIZE * data.length)
+    : data.slice(data.length - VALIDATION_SIZE * data.length);
 }
 
 async function getManifest(dataType: DataType) {
-  const buffer = Buffer.from(await readFile(`./dataset/${dataType}.csv`));
+  const buffer = Buffer.from(
+    await fs.promises.readFile(`./dataset/${dataType}.csv`)
+  );
   const manifest = await neatCsv<ManifestEntry>(buffer);
   return manifest;
 }
 
-export async function getArrayFromImage(path: string) {
-  const image = await readFile(path);
+export async function getImageArrayFromPath(path: string) {
+  const image = await fs.promises.readFile(path);
   const buffer = Buffer.from(image);
   return new Uint8Array(buffer);
 }

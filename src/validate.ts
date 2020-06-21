@@ -1,4 +1,4 @@
-import { getData, getArrayFromImage as getImageArrayFromPath } from "./data";
+import { getData, getImageArrayFromPath } from "./data";
 
 import { loadClassifier } from "./utils/ModelUtils";
 import { max } from "./utils/ArrayUtils";
@@ -13,15 +13,23 @@ async function validate() {
   const net = await mobileNet.load();
   const data = await getData("train");
 
-  let index = 0;
+  let completed = 0;
+  let correct = 0;
 
-  for (const { path, category } of data) {
-    console.log(++index, data.length);
-
+  for (let index = 0; index < data.length; index++) {
+    const { path, category } = data[index];
     const imageArray = await getImageArrayFromPath(path);
     const imageTensor = tf.node.decodePng(imageArray);
     const activation = net.infer(imageTensor, true);
     const result = await classifier.predictClass(activation);
-    console.log(max(result.confidences), category);
+
+    if (max(result.confidences) === category) {
+      correct++;
+    }
+    console.log(
+      "Validation:",
+      `Processed ${++completed} of ${data.length}`,
+      `Accuracy: ${correct / index}`
+    );
   }
 }

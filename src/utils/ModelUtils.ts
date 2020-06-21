@@ -1,13 +1,9 @@
 import fs from "fs";
-import { promisify } from "util";
 
 import tf = require("@tensorflow/tfjs-node");
 import knn = require("@tensorflow-models/knn-classifier");
 
 type DatasetObject = [string, number[], [number, number]][];
-
-const writeFile = promisify(fs.writeFile);
-const readFile = promisify(fs.readFile);
 
 export function save(classifier: knn.KNNClassifier) {
   const dataset = classifier.getClassifierDataset();
@@ -19,11 +15,11 @@ export function save(classifier: knn.KNNClassifier) {
   if (!fs.existsSync(".models")) {
     fs.mkdirSync(".models");
   }
-  return writeFile(".models/knn.json", jsonStr);
+  return fs.promises.writeFile(".models/knn.json", jsonStr);
 }
 
 export async function loadClassifier() {
-  const buffer = await readFile(".models/knn.json");
+  const buffer = await fs.promises.readFile(".models/knn.json");
   const datasetObj: DatasetObject = JSON.parse(buffer.toString());
 
   const tensorObj: { [label: string]: tf.Tensor2D } = datasetObj
