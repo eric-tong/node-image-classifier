@@ -2,6 +2,5 @@ node_modules/
 .out/
 .models/
 tmp/
-dataset/**/*.jpg
-dataset/**/*.tmp
+dataset/
 .DS_Store
