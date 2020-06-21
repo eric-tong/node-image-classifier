@@ -16,13 +16,18 @@ async function findActivations() {
   createFiles(data);
 
   for (const { path, category } of data) {
-    const imageArray = await getImageArrayFromPath(path);
-    tf.tidy(() => {
+    try {
+      const imageArray = await getImageArrayFromPath(path);
       const imageTensor = tf.node.decodePng(imageArray);
       const activation = net.infer(imageTensor, true);
       saveActivation(activation.dataSync(), category);
-    });
-    console.log("Activations:", `Processed ${++completed} of ${data.length}`);
+
+      tf.dispose(imageTensor);
+      tf.dispose(activation);
+      console.log("Activations:", `Processed ${++completed} of ${data.length}`);
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
 
