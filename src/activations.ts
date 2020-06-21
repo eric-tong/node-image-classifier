@@ -1,4 +1,4 @@
-import { getData, getImageArrayFromPath } from "./data";
+import { getImageArrayFromPath, getManifest } from "./data";
 
 import { TypedArray } from "@tensorflow/tfjs-node";
 import fs from "fs";
@@ -10,7 +10,7 @@ findActivations();
 
 async function findActivations() {
   const net = await mobileNet.load();
-  const data = await getData("train");
+  const data = await getManifest("train");
   let completed = 0;
 
   createFiles(data);

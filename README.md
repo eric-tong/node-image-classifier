@@ -26,6 +26,5 @@ Preprocess, train and validate
 
 ```
 yarn preprocess
-yarn train
-yarn validate
+yarn start
 ```

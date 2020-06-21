@@ -3,8 +3,7 @@
   "scripts": {
     "compile": "yarn run tsc --watch",
     "preprocess": "node --enable-source-maps .out/activations",
-    "train": "node --enable-source-maps .out/train",
-    "validate": "node --enable-source-maps .out/validate",
+    "start": "node --enable-source-maps .out/index",
     "test": "yarn run jest --passWithNoTests"
   },
   "devDependencies": {

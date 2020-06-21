@@ -1,26 +1,16 @@
-import { getData, getImageArrayFromPath } from "./data";
-
-import { loadClassifier } from "./utils/ModelUtils";
 import { max } from "./utils/ArrayUtils";
+import type knn from "@tensorflow-models/knn-classifier";
+import type tf from "@tensorflow/tfjs-node";
 
-import tf = require("@tensorflow/tfjs-node");
-import mobileNet = require("@tensorflow-models/mobilenet");
-
-validate();
-
-async function validate() {
-  const classifier = await loadClassifier();
-  const net = await mobileNet.load();
-  const data = await getData("train");
-
+export async function validate(
+  classifier: knn.KNNClassifier,
+  data: { category: string; activation: tf.Tensor1D }[]
+) {
   let completed = 0;
   let correct = 0;
 
   for (let index = 0; index < data.length; index++) {
-    const { path, category } = data[index];
-    const imageArray = await getImageArrayFromPath(path);
-    const imageTensor = tf.node.decodePng(imageArray);
-    const activation = net.infer(imageTensor, true);
+    const { activation, category } = data[index];
     const result = await classifier.predictClass(activation);
 
     if (max(result.confidences) === category) {
@@ -32,4 +22,6 @@ async function validate() {
       `Accuracy: ${correct / index}`
     );
   }
+
+  return "Complete";
 }

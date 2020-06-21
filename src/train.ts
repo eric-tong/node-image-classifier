@@ -1,25 +1,16 @@
-import { getData, getImageArrayFromPath } from "./data";
-
-import { save } from "./utils/ModelUtils";
-
-import tf = require("@tensorflow/tfjs-node");
-import mobileNet = require("@tensorflow-models/mobilenet");
 import knn = require("@tensorflow-models/knn-classifier");
+import type tf from "@tensorflow/tfjs-node";
 
-train();
-
-async function train() {
+export async function trainKnnClassifier(
+  data: { category: string; activation: tf.Tensor1D }[]
+) {
   const classifier = knn.create();
-  const net = await mobileNet.load();
-  const data = await getData("train");
-  let completed = 0;
+  let complete = 0;
 
-  for (const { path, category } of data) {
-    const imageArray = await getImageArrayFromPath(path);
-    const imageTensor = tf.node.decodePng(imageArray);
-    const activation = net.infer(imageTensor, true);
+  for (const { activation, category } of data) {
     classifier.addExample(activation, category);
-    console.log("Training:", `Processed ${++completed} of ${data.length}`);
+    console.log("Training: ", `Completed ${complete} of ${data.length}`);
   }
-  save(classifier);
+
+  return classifier;
 }
