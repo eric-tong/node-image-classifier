@@ -2,6 +2,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "compile": "yarn run tsc --watch",
+    "preprocess": "node --enable-source-maps .out/activations",
     "train": "node --enable-source-maps .out/train",
     "validate": "node --enable-source-maps .out/validate",
     "test": "yarn run jest --passWithNoTests"

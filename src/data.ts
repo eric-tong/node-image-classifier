@@ -2,7 +2,6 @@ import { TRAINING_SIZE, VALIDATION_SIZE } from "./config";
 
 import fs from "fs";
 import neatCsv from "neat-csv";
-import { shuffle } from "./utils/ArrayUtils";
 
 export async function getData(dataType: DataType) {
   const manifest = await getManifest(dataType);
@@ -13,11 +12,7 @@ export async function getData(dataType: DataType) {
         : `./dataset/test/test/${filename}`,
     category,
   }));
-
-  shuffle(data);
-  return dataType === "train"
-    ? data.slice(0, TRAINING_SIZE * data.length)
-    : data.slice(data.length - VALIDATION_SIZE * data.length);
+  return data;
 }
 
 async function getManifest(dataType: DataType) {

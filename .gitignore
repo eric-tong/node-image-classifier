@@ -1,6 +1,6 @@
 node_modules/
 .out/
-.models/
+.processed/
 tmp/
 dataset/
 .DS_Store
