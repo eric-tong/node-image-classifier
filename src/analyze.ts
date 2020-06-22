@@ -12,31 +12,28 @@ export function analyze(
   }[]
 ) {
   const data: ProcessedData[] = results.map(result => ({
-    actual: result.predicted,
-    predicted: result.actual,
+    actual: result.actual,
+    predicted: result.predicted,
     confidences: Object.entries(result.confidences)
       .map(([category, confidence]) => ({ category, confidence }))
       .sort((a, b) => b.confidence - a.confidence),
   }));
 
   return {
-    top1: top1Accuracy(data),
-    top3: top3Accuracy(data),
+    top1: topKAccuracy(data, 1),
+    top2: topKAccuracy(data, 2),
+    top3: topKAccuracy(data, 3),
+    top4: topKAccuracy(data, 4),
+    top5: topKAccuracy(data, 5),
     ...topMisclassifications(data),
   };
 }
 
-function top1Accuracy(data: ProcessedData[]) {
-  return (
-    data.filter(value => value.actual === value.predicted).length / data.length
-  );
-}
-
-function top3Accuracy(data: ProcessedData[]) {
+function topKAccuracy(data: ProcessedData[], k: number) {
   return (
     data.filter(value =>
       value.confidences
-        .slice(0, 3)
+        .slice(0, k)
         .map(confidence => confidence.category)
         .includes(value.actual)
     ).length / data.length
