@@ -1,7 +1,5 @@
-import { max } from "./utils/ArrayUtils";
 import type knn from "@tensorflow-models/knn-classifier";
 import { TrainingData } from "./data";
-
 import tf = require("@tensorflow/tfjs-node");
 
 export async function validate(
@@ -14,22 +12,14 @@ export async function validate(
   const activations = Object.values(data).map(value => value.activation);
   const predictClass = (activation: tf.Tensor1D) =>
     classifier.predictClass(activation).then(result => {
-      console.log(
-        "Validation:",
-        `Completed ${++completed} of ${activations.length}`
-      );
+      if (++completed % 100 === 0)
+        console.log(
+          "Validation:",
+          `Completed ${completed} of ${activations.length}`
+        );
 
-      const predicted = max(result.confidences);
-      const actual = result.label;
-      return {
-        correct: actual === predicted,
-        actual,
-        predicted,
-        ...result.confidences,
-      };
+      return result;
     });
   const results = await Promise.all(activations.map(predictClass));
-  console.table(results);
-
-  return "Complete";
+  return results;
 }
