@@ -1,5 +1,5 @@
-import { analyze } from "./analyze";
-import { getData } from "./data";
+import { analyze } from "../analyze";
+import { getData } from "../data";
 import { trainKnnClassifier } from "./train";
 import { validate } from "./validate";
 

@@ -1,5 +1,5 @@
-import { CATEGORIES } from "./config";
-import { TrainingData } from "./data";
+import { CATEGORIES } from "../config";
+import { TrainingData } from "../data";
 
 import tf = require("@tensorflow/tfjs-node");
 import knn = require("@tensorflow-models/knn-classifier");
@@ -16,11 +16,11 @@ export async function trainKnnClassifier(data: TrainingData[]) {
 
 function getClassifierDataset(data: TrainingData[]): ClassifierDataset {
   let result: ClassifierDataset = {};
-  CATEGORIES.forEach((category) => {
+  CATEGORIES.forEach(category => {
     result[category] = tf.stack(
       data
-        .filter((entry) => entry.category === category)
-        .map((entry) => entry.activation)
+        .filter(entry => entry.category === category)
+        .map(entry => entry.activation)
     ) as tf.Tensor2D;
   });
   return result;

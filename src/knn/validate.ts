@@ -1,5 +1,5 @@
 import type knn from "@tensorflow-models/knn-classifier";
-import { TrainingData } from "./data";
+import { TrainingData } from "../data";
 import tf = require("@tensorflow/tfjs-node");
 
 export async function validate(
