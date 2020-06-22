@@ -1,5 +1,6 @@
 import { getImageArrayFromPath, getManifest } from "./data";
 
+import { CATEGORIES } from "./config";
 import { TypedArray } from "@tensorflow/tfjs-node";
 import fs from "fs";
 
@@ -34,11 +35,10 @@ async function findActivations() {
 function createFiles(array: { category: string }[]) {
   if (!fs.existsSync(".processed")) {
     fs.mkdirSync(".processed");
+    CATEGORIES.forEach(category =>
+      fs.writeFileSync(`.processed/${category}.csv`, "")
+    );
   }
-  const categories = new Set(array.map(({ category }) => category));
-  categories.forEach((category) =>
-    fs.writeFileSync(`.processed/${category}.csv`, "")
-  );
 }
 
 function saveActivation(activation: TypedArray, category: string) {

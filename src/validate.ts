@@ -10,16 +10,16 @@ export async function validate(
   let completed = 0;
 
   const activations = Object.values(data).map(value => value.activation);
-  const predictClass = (activation: tf.Tensor1D) =>
-    classifier.predictClass(activation).then(result => {
-      if (++completed % 100 === 0)
-        console.log(
-          "Validation:",
-          `Completed ${completed} of ${activations.length}`
-        );
+  const results = [];
 
-      return result;
-    });
-  const results = await Promise.all(activations.map(predictClass));
+  for (const activation of activations) {
+    const result = await classifier.predictClass(activation);
+    results.push(result);
+    console.log(
+      "Validation:",
+      `Completed ${++completed} of ${activations.length}`
+    );
+  }
+
   return results;
 }
