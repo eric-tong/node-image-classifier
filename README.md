@@ -7,7 +7,7 @@ Simple image classifier using tensorflow.js and MobileNet
 Clone this repository
 
 ```
-git clone https://github.com/eric-tong/node-simple-image-classifier.git <project_name>
+git clone https://github.com/eric-tong/node-image-classifier.git <project_name>
 ```
 
 Change into the new project directory and install the dependencies
@@ -28,10 +28,13 @@ Preprocess by using MobileNet to find activations
 yarn preprocess
 ```
 
-Finally, use KNN or Sequential models to predict classes
+Finally, use Sequential or KNN models to predict classes
 
 ```
+(Sequential)
+yarn train
+yarn validate
+
+(KNN)
 yarn knn
-(or)
-yarn sequential
 ```

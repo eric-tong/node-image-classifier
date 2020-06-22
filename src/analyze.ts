@@ -19,6 +19,9 @@ export function analyze(results: PredictionResult[]) {
       .sort((a, b) => b.confidence - a.confidence),
   }));
 
+  console.table(
+    misclassifiedConfidences(data.map(val => ({ ...val, ...val.confidences })))
+  );
   return {
     top1: topKAccuracy(data, 1),
     top2: topKAccuracy(data, 2),
@@ -58,4 +61,8 @@ function topMisclassifications(data: ProcessedData[]) {
       result[val[0]] = val[1];
     });
   return result;
+}
+
+function misclassifiedConfidences(data: ProcessedData[]) {
+  return data.filter(val => val.actual !== val.predicted);
 }
