@@ -22,9 +22,16 @@ Start the compilation watcher
 yarn compile
 ```
 
-Preprocess, train and validate
+Preprocess by using MobileNet to find activations
 
 ```
 yarn preprocess
-yarn start
+```
+
+Finally, use KNN or Sequential models to predict classes
+
+```
+yarn knn
+(or)
+yarn sequential
 ```

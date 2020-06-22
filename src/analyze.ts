@@ -1,16 +1,16 @@
+export type PredictionResult = {
+  predicted: string;
+  actual: string;
+  confidences: { [label: string]: number };
+};
+
 type ProcessedData = {
   actual: string;
   predicted: string;
   confidences: { category: string; confidence: number }[];
 };
 
-export function analyze(
-  results: {
-    predicted: string;
-    actual: string;
-    confidences: { [label: string]: number };
-  }[]
-) {
+export function analyze(results: PredictionResult[]) {
   const data: ProcessedData[] = results.map(result => ({
     actual: result.actual,
     predicted: result.predicted,

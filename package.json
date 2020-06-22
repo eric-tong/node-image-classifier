@@ -4,6 +4,7 @@
     "compile": "yarn run tsc --watch",
     "preprocess": "node --enable-source-maps .out/activations",
     "knn": "node --enable-source-maps .out/knn/index",
+    "sequential": "node --enable-source-maps .out/sequential/index",
     "test": "yarn run jest --passWithNoTests"
   },
   "devDependencies": {
