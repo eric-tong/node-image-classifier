@@ -20,13 +20,3 @@ function getRandomGenerator() {
   let seed = 0;
   return () => Math.sin(++seed) / 2 + 0.5;
 }
-
-export function max(array: { [category: string]: number }) {
-  let maxCategory = "";
-  let maxProbablity = 0;
-
-  for (const [category, probability] of Object.entries(array)) {
-    if (probability > maxProbablity) maxCategory = category;
-  }
-  return maxCategory;
-}

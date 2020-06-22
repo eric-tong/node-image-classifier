@@ -12,9 +12,13 @@ export async function validate(
   const activations = Object.values(data).map(value => value.activation);
   const results = [];
 
-  for (const activation of activations) {
+  for (const { category, activation } of Object.values(data)) {
     const result = await classifier.predictClass(activation);
-    results.push(result);
+    results.push({
+      predicted: result.label,
+      actual: category,
+      confidences: result.confidences,
+    });
     console.log(
       "Validation:",
       `Completed ${++completed} of ${activations.length}`

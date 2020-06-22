@@ -1,4 +1,9 @@
-import { CATEGORIES, TRAINING_SIZE, VALIDATION_SIZE } from "./config";
+import {
+  CATEGORIES,
+  CATEGORY_COUNT,
+  TRAINING_SIZE,
+  VALIDATION_SIZE,
+} from "./config";
 
 import fs from "fs";
 import neatCsv from "neat-csv";
@@ -14,10 +19,13 @@ export async function getData() {
   let completed = 0;
 
   await Promise.all(
-    CATEGORIES.map(async (category) => {
+    CATEGORIES.map(async category => {
       const activations = await getActivations(category);
       data.push(...activations);
-      console.log("Getting data: ", `Completed ${++completed} of 42`);
+      console.log(
+        "Getting data: ",
+        `Completed ${++completed} of ${CATEGORY_COUNT}`
+      );
     })
   );
 
@@ -37,7 +45,7 @@ async function getActivations(category: string) {
   const activations = [];
 
   for await (const line of lines) {
-    const activation = line.split(",").map((str) => parseFloat(str));
+    const activation = line.split(",").map(str => parseFloat(str));
     activations.push({ category, activation: tf.tensor1d(activation) });
   }
   return activations;
