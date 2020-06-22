@@ -1,16 +1,27 @@
+import { CATEGORIES } from "./config";
+import { TrainingData } from "./data";
+
+import tf = require("@tensorflow/tfjs-node");
 import knn = require("@tensorflow-models/knn-classifier");
-import type tf from "@tensorflow/tfjs-node";
 
-export async function trainKnnClassifier(
-  data: { category: string; activation: tf.Tensor1D }[]
-) {
+type ClassifierDataset = { [category: string]: tf.Tensor2D };
+
+export async function trainKnnClassifier(data: TrainingData[]) {
+  console.log("Training started");
   const classifier = knn.create();
-  let complete = 0;
-
-  for (const { activation, category } of data) {
-    classifier.addExample(activation, category);
-    console.log("Training: ", `Completed ${++complete} of ${data.length}`);
-  }
-
+  const dataset = getClassifierDataset(data);
+  classifier.setClassifierDataset(dataset);
   return classifier;
+}
+
+function getClassifierDataset(data: TrainingData[]): ClassifierDataset {
+  let result: ClassifierDataset = {};
+  CATEGORIES.forEach((category) => {
+    result[category] = tf.stack(
+      data
+        .filter((entry) => entry.category === category)
+        .map((entry) => entry.activation)
+    ) as tf.Tensor2D;
+  });
+  return result;
 }

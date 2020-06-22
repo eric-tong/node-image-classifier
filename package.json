@@ -20,6 +20,9 @@
       "**/src/**/__test__/*.test.ts"
     ]
   },
+  "prettier": {
+    "arrowParens": "avoid"
+  },
   "babel": {
     "presets": [
       [

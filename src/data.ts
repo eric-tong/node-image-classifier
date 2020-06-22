@@ -1,4 +1,4 @@
-import { TRAINING_SIZE, VALIDATION_SIZE } from "./config";
+import { CATEGORIES, TRAINING_SIZE, VALIDATION_SIZE } from "./config";
 
 import fs from "fs";
 import neatCsv from "neat-csv";
@@ -7,20 +7,21 @@ import { shuffle } from "./utils/ArrayUtils";
 
 import tf = require("@tensorflow/tfjs-node");
 
+export type TrainingData = { category: string; activation: tf.Tensor1D };
+
 export async function getData() {
-  const data: { category: string; activation: tf.Tensor1D }[] = [];
+  const data: TrainingData[] = [];
   let completed = 0;
 
   await Promise.all(
-    Array.from({ length: 42 }, async (_, i) => {
-      const category = i.toString().padStart(2, "0");
+    CATEGORIES.map(async (category) => {
       const activations = await getActivations(category);
       data.push(...activations);
       console.log("Getting data: ", `Completed ${++completed} of 42`);
     })
   );
-  shuffle(data);
 
+  shuffle(data);
   return {
     training: data.slice(0, TRAINING_SIZE * data.length),
     validation: data.slice(data.length - VALIDATION_SIZE * data.length),

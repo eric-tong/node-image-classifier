@@ -1,27 +1,35 @@
 import { max } from "./utils/ArrayUtils";
 import type knn from "@tensorflow-models/knn-classifier";
-import type tf from "@tensorflow/tfjs-node";
+import { TrainingData } from "./data";
+
+import tf = require("@tensorflow/tfjs-node");
 
 export async function validate(
   classifier: knn.KNNClassifier,
-  data: { category: string; activation: tf.Tensor1D }[]
+  data: TrainingData[]
 ) {
+  console.log("Validation started");
   let completed = 0;
-  let correct = 0;
 
-  for (let index = 0; index < data.length; index++) {
-    const { activation, category } = data[index];
-    const result = await classifier.predictClass(activation);
+  const activations = Object.values(data).map(value => value.activation);
+  const predictClass = (activation: tf.Tensor1D) =>
+    classifier.predictClass(activation).then(result => {
+      console.log(
+        "Validation:",
+        `Completed ${++completed} of ${activations.length}`
+      );
 
-    if (max(result.confidences) === category) {
-      correct++;
-    }
-    console.log(
-      "Validation:",
-      `Processed ${++completed} of ${data.length}`,
-      `Accuracy: ${correct / index}`
-    );
-  }
+      const predicted = max(result.confidences);
+      const actual = result.label;
+      return {
+        correct: actual === predicted,
+        actual,
+        predicted,
+        ...result.confidences,
+      };
+    });
+  const results = await Promise.all(activations.map(predictClass));
+  console.table(results);
 
   return "Complete";
 }
